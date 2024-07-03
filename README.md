@@ -1,2 +1,4 @@
-# egel-serf
-The Egel Gopher/WWW Server
+# The Egel Gopher/WWW Server
+
+A small Egel script implementing a minimalist Gopher
+server. 
