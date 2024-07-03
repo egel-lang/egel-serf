@@ -55,11 +55,8 @@ namespace Serf (
 
     def serve_selector =
         [S -> 
-            if Dict::has db S then
-                let DOC = Dict::get db S in
-                print (to_gopher DOC)
-            else
-                print (to_gopher unknown)]
+            if Dict::has db S then print (to_gopher (Dict::get db S))
+            else print (to_gopher unknown)]
 
     def to_gopher =
         let FAKE = "\tfake\t(NULL)\t0\r\n" in
