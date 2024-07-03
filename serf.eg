@@ -39,26 +39,25 @@ namespace Serf (
         else start_servers
 
     def start_gopher_server =
-        OS::exec "rm -f /tmp/serf_gopher";
-        OS::exec "mkfifo -m 600 /tmp/serf_gopher";
-        OS::exec "while true ; do egel serf.eg gopher < /tmp/serf_gopher | nc -l localhost 1500 > /tmp/serf_gopher ; sleep 1 ; done &"
+        OS::exec "while true ; do nc -l localhost 1500 -c \"egel serf.eg gopher\"; sleep 1 ; done"
 
-    def start_www_server =
-        OS::exec "rm -f /tmp/serf_www";
-        OS::exec "mkfifo -m 600 /tmp/serf_www";
-        OS::exec "while true ; do egel serf.eg www < /tmp/serf_www | nc -l localhost 1501 > /tmp/serf_www ; sleep 1 ; done &"
+    def start_www_server = 42
 
     def start_servers = start_gopher_server #; start_www_server; none
 )
 
 namespace Serf (
 
-    def serve_gopher_request = serve_selector (OS::input |> [{} -> ""|{X|XX} -> X] |> trim_crlf)
+    def trace = [X -> print "trace " X "\n"; X]
+
+    #def serve_gopher_request = print "halp\n"; serve_selector (OS::read_line |> trace |> [{} -> ""|{X|XX} -> X] |> trim_crlf)
+    def serve_gopher_request = print "halp\n"; serve_selector ((OS::read_line OS::stdin) |> trace |> trim_crlf)
 
     def trim_crlf = do unpack |> break [C -> or (C == '\n') (C == '\r')] |> fst |> pack
 
     def serve_selector =
         [S -> 
+            print S "\n";
             if Dict::has db S then
                 let DOC = Dict::get db S in
                 print (to_gopher DOC)
