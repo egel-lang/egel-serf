@@ -21,7 +21,6 @@ import "dictionary.eg"
 using System
 using List
 
-
 def main = Serf::start
 
 namespace OS (
@@ -33,8 +32,9 @@ namespace OS (
 namespace Serf (
 
     def start =
-        if elem "gopher" args then serve_gopher_request
-        else if elem "www" args then serve_www_request
+        if elem "help" args then print "Usage: serf.eg [help] [gopher|www|debug]\n"
+        else if elem "gopher" args then serve_gopher_request
+#        else if elem "www" args then serve_www_request
         else if elem "debug" args then debug
         else start_servers
 
@@ -86,17 +86,6 @@ namespace Serf (
 
     def debug = map [(K,V) -> print "selector: " K "\n"; print (to_txt V)] (Dict::to_list db); none
 
-)
-
-namespace Serf (
-    data h0, h1, h2, par, code, link
-
-    val db = Dict::from_list {
-        ("", {h0 "The Egel Language", par "A paragraph"})
-    }
-
-    val unknown = {h0 "Uhoh", par "You seem to be lost!"}
-
     def to_txt =
         [{} -> "" |{X|XX} -> to_txt X + "\n\n" + to_txt XX
         |(h0 S) -> "# " + S
@@ -105,4 +94,14 @@ namespace Serf (
         |(par S) -> S
         |(code S) -> S
         |(link S T) -> S + "::" T ]
+)
+
+namespace Serf (
+    data h0, h1, h2, par, code, link
+
+    val db = Dict::from_list {
+        ("", {h0 "The Egel Language", par "Be cool."})
+    }
+
+    val unknown = {h0 "Uhoh", par "You seem to be lost!"}
 )
