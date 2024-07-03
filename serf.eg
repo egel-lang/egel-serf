@@ -42,7 +42,7 @@ namespace Serf (
         OS::exec "while true ; do nc -l localhost 1500 -c \"egel serf.eg gopher\"; sleep 1 ; done"
 
     def start_www_server =
-        OS::exec "while true ; do nc -l localhost 1500 -c \"egel serf.eg gopher\"; sleep 1 ; done"
+        OS::exec "while true ; do nc -l localhost 1501 -c \"egel serf.eg www\"; sleep 1 ; done"
 
     def start_servers = start_gopher_server #; start_www_server; none
 )
