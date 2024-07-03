@@ -1,0 +1,86 @@
+#!/usr/local/bin/egel
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or (at
+# your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import "prelude.eg"
+import "os.ego"
+import "dictionary.eg"
+
+using System
+using List
+
+
+def main = Serf::start
+
+namespace OS (
+    using OS
+
+    def input = let L = read_line stdin in if eof stdin then {} else {L | input}
+)
+
+namespace Serf (
+
+    def start =
+        if elem "gopher" args then serve_gopher_request
+        else if elem "www" args then serve_www_request
+        else if elem "debug" args then debug
+        else start_servers
+
+    def start_gopher_server =
+        OS::exec "rm -f /tmp/serf_gopher";
+        OS::exec "mkfifo -m 600 /tmp/serf_gopher";
+        OS::exec "while true ; do egel serf.eg gopher < /tmp/serf_gopher | nc -l localhost 1500 > /tmp/serf_gopher ; sleep 1 ; done &"
+
+    def start_www_server =
+        OS::exec "rm -f /tmp/serf_www";
+        OS::exec "mkfifo -m 600 /tmp/serf_www";
+        OS::exec "while true ; do egel serf.eg www < /tmp/serf_www | nc -l localhost 1501 > /tmp/serf_www ; sleep 1 ; done &"
+
+    def start_servers = start_gopher_server #; start_www_server; none
+)
+
+namespace Serf (
+
+    def serve_gopher_request = args
+
+)
+
+namespace Serf (
+
+    def serve_www_request = 43
+
+)
+
+namespace Serf (
+
+    def debug = map [(K,V) -> print "selector: " K "\n"; print (to_txt V)] (Dict::to_list db); none
+
+)
+
+namespace Serf (
+    data h0, h1, h2, par, code, link
+
+    val db = Dict::from_list {
+        ("", {h0 "The Egel Language", par "A paragraph"})
+    }
+
+    def to_txt =
+        [{} -> "" |{X|XX} -> to_txt X + "\n\n" + to_txt XX
+        |(h0 S) -> "# " + S
+        |(h1 S) -> "## " + S
+        |(h2 S) -> "### " +  S
+        |(par S) -> S
+        |(code S) -> S
+        |(link S T) -> S + "::" T ]
+)
