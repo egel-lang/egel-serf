@@ -43,14 +43,13 @@ namespace Serf (
 
 namespace Serf (
 
-    def serve_gopher_request = serve_selector ((OS::read_line OS::stdin) |> trim_crlf)
+    def serve_gopher_request = serve_selector ((OS::read_line OS::stdin) |> trim_crlf |> trim_lead)
 
     def trim_crlf = do unpack |> break [C -> or (C == '\n') (C == '\r')] |> fst |> pack
 
-    def serve_selector =
-        [S -> 
-            if Dict::has db S then print (to_gopher (Dict::get db S))
-            else print (to_gopher unknown)]
+    def trim_lead = [ S -> if String::starts_with "/" S then String::remove 0 1 S else S ]
+
+    def serve_selector = do db_page |> to_gopher |> [T -> print T]
 
     def to_gopher =
         let FAKE = "\tfake\t(NULL)\t0\r\n" in
@@ -60,35 +59,42 @@ namespace Serf (
         |(h2 S) -> "i### " +  S + FAKE
         |(par S) -> "i" + S + FAKE
         |(code S) -> "i" + S + FAKE
-        |(link S T) -> S + "::" T ]
+        |(link S T) -> "1" + S + "\t/" + T + "\tegel.dev\t70\r\n"  ]
 )
 
 namespace Serf (
 
-    def trim_lead = [ S -> if String::starts_with "/" S then String::remove 0 1 S else S ]
 
     def to_request = do unpack |> split_on ' ' |> [{V,U|_} -> (pack V, trim_lead (pack U))| _ -> none]
 
     def serve_www_request = serve_verb ((OS::read_line OS::stdin) |> trim_crlf |> to_request)
 
     def serve_verb =
-	[("GET", URL) -> to_txt (db_page URL)
+	[("GET", URL) -> db_page URL |> to_html |> [T -> print T]
         |_ -> 43 ]
 
+    def to_html =
+        [{} -> "" |{X|XX} -> to_html X + "\n" + to_html XX
+        |(h0 S) -> "<h1>" + S + "</h1>\n"
+        |(h1 S) -> "<h2>" + S + "</h2>\n"
+        |(h2 S) -> "<h3>" +  S + "</h3>\n"
+        |(par S) -> "<p>" + S + "</p>\n"
+        |(code S) -> "<pre><code>" + S + "</code></pre>\n"
+        |(link S T) -> "<a href=\"/" + T + "\">" + T + "</a>\n" ]
 )
 
 namespace Serf (
 
-    def debug = map [(K,V) -> print "selector: " K "\n"; print (to_txt V)] (Dict::to_list db); none
+    def debug = map [K -> print "selector: " K "\n"; print (to_txt (db_page K))] db_keys; none
 
     def to_txt =
-        [{} -> "" |{X|XX} -> to_txt X + "\n\n" + to_txt XX
-        |(h0 S) -> "# " + S
-        |(h1 S) -> "## " + S
-        |(h2 S) -> "### " +  S
-        |(par S) -> S
-        |(code S) -> S
-        |(link S T) -> S + "::" T ]
+        [{} -> "" |{X|XX} -> to_txt X + "\n" + to_txt XX
+        |(h0 S) -> "# " + S + "\n"
+        |(h1 S) -> "## " + S + "\n"
+        |(h2 S) -> "### " +  S + "\n"
+        |(par S) -> S + "\n"
+        |(code S) -> S + "\n"
+        |(link S T) -> "->" + S + "::" + T ]
 )
 
 namespace Serf (
@@ -102,15 +108,17 @@ namespace Serf (
 
     def db_keys = Dict::keys db
 
-    def db_subs = [K -> db_keys |> filter (String::starts_with (K+"/")) 
-                            |> filter [S -> 0 <= (String::char_at '/' (String::remove 0 (String::length (K+"/")) S))] ]
+    def db_subs = [K -> db_keys |> filter (String::starts_with K) 
+                        |> filter [S -> and (S /= K) ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
 
-    def db_page = [K -> {db_get K | db_subs K |> map [K -> link K K]}]
+    def db_page = [K -> if db_has K then {db_get K | db_subs K |> map [K -> link K K]} else db_unknown]
 
     def db_pages =
     {
-        ("", {h0 "The Egel Language", par "Be cool."})
+        ("", {h0 "The Egel Language", par "Be cool."}),
+	("sub", par "this is sub"),
+	("sub/sub", par "this is sub/sub")
     }
 
-    def unknown = {h0 "Uhoh", par "You seem to be lost!"}
+    def db_unknown = {h0 "Uhoh", par "You seem to be lost!"}
 )
