@@ -69,8 +69,14 @@ namespace Serf (
     def serve_www_request = serve_verb ((OS::read_line OS::stdin) |> trim_crlf |> to_request)
 
     def serve_verb =
-	[("GET", URL) -> db_page URL |> to_html |> [T -> print T]
+	[("GET", URL) -> db_page URL |> to_html |> serve_page
         |_ -> 43 ]
+
+    def serve_page =
+	[ T ->
+             print "HTTP/1.1 200 OK\r\n";
+             print "Content-Type: text/html\r\n\r\n";
+ 	     print T ]
 
     def to_html =
         [{} -> "" |{X|XX} -> to_html X + "\n" + to_html XX
