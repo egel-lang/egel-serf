@@ -64,7 +64,6 @@ namespace Serf (
 
 namespace Serf (
 
-
     def to_request = do unpack |> split_on ' ' |> [{V,U|_} -> (pack V, trim_lead (pack U))| _ -> none]
 
     def serve_www_request = serve_verb ((OS::read_line OS::stdin) |> trim_crlf |> to_request)
@@ -111,11 +110,11 @@ namespace Serf (
     def db_subs = [K -> db_keys |> filter (String::starts_with K) 
                         |> filter [S -> and (S /= K) ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
 
-    def db_page = [K -> if db_has K then {db_get K | db_subs K |> map [K -> link K K]} else db_unknown]
+    def db_page = [K -> if db_has K then {h0 "The Egel Language", db_get K | db_subs K |> map [K -> link K K]} else db_unknown]
 
     def db_pages =
     {
-        ("", {h0 "The Egel Language", par "Be cool."}),
+        ("", {par "Be cool."}),
 	("sub", par "this is sub"),
 	("sub/sub", par "this is sub/sub")
     }
