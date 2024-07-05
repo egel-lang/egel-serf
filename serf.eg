@@ -51,14 +51,21 @@ namespace Serf (
 
     def serve_selector = do db_page |> to_gopher |> [T -> print T]
 
+    def gopher_line =
+        [S -> "i" + S + "\tfake\t(NULL)\t0\r\n"]
+
+    def code_numbers =
+        let F = [S -> (iter (4 - String::length S) [S -> " " + S] S) + ": "] in
+        do unpack |> split_on '\n' |> map pack 
+            |> [LL -> zip_with (+) (map (do to_text |> F) (from_to 1 (length LL + 1))) LL]
+
     def to_gopher =
-        let FAKE = "\tfake\t(NULL)\t0\r\n" in
         [{} -> "" |{X|XX} -> to_gopher X + to_gopher XX
-        |(h0 S) -> "i# " + S + FAKE
-        |(h1 S) -> "i## " + S + FAKE
-        |(h2 S) -> "i### " +  S + FAKE
-        |(par S) -> "i" + S + FAKE
-        |(code S) -> "i" + S + FAKE
+        |(h0 S) ->   gopher_line ("# " + S)
+        |(h1 S) ->   gopher_line ("## " + S)
+        |(h2 S) ->   gopher_line ("### " +  S)
+        |(par S) ->  gopher_line S
+        |(code S) -> map gopher_line (code_numbers S) |> foldr (+) ""
         |(link S T) -> "1" + S + "\t/" + T + "\tegel.dev\t70\r\n"  ]
 )
 
@@ -69,14 +76,14 @@ namespace Serf (
     def serve_www_request = serve_verb ((OS::read_line OS::stdin) |> trim_crlf |> to_request)
 
     def serve_verb =
-	[("GET", URL) -> db_page URL |> to_html |> serve_page
+        [("GET", URL) -> db_page URL |> to_html |> serve_page
         |_ -> 43 ]
 
     def serve_page =
-	[ T ->
+        [ T ->
              print "HTTP/1.1 200 OK\r\n";
              print "Content-Type: text/html\r\n\r\n";
- 	     print_html T ]
+          print_html T ]
 
     def print_html =
         [T ->
@@ -129,9 +136,10 @@ namespace Serf (
     def db_pages =
     {
         ("", {par "Be cool."}),
-	("sub", par "this is sub"),
-	("sub/sub", par "this is sub/sub"),
-	("action", action [_ -> par "action performed"])
+        ("sub", par "this is sub"),
+        ("sub/sub", par "this is sub/sub"),
+        ("action", action [_ -> par "action performed"]),
+        ("code", code "foo bar \n bazz \n")
     }
 
     def db_unknown = {h0 "Uhoh", par "You seem to be lost!"}
