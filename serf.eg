@@ -109,7 +109,7 @@ namespace Serf (
 )
 
 namespace Serf (
-    data h0, h1, h2, par, code, link
+    data h0, h1, h2, par, code, link, action
 
     val db = Dict::from_list db_pages
 
@@ -122,13 +122,16 @@ namespace Serf (
     def db_subs = [K -> db_keys |> filter (String::starts_with K) 
                         |> filter [S -> and (S /= K) ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
 
-    def db_page = [K -> if db_has K then {h0 "The Egel Language", db_get K | db_subs K |> map [K -> link K K]} else db_unknown]
+    def db_page = [K -> if db_has K then {h0 "The Egel Language", db_get K |> do_action | db_subs K |> map [K -> link K K]} else db_unknown]
+
+    def do_action = [{} -> {} | {X|XX} -> map do_action {X|XX} |(action F) -> F none|X -> X]
 
     def db_pages =
     {
         ("", {par "Be cool."}),
 	("sub", par "this is sub"),
-	("sub/sub", par "this is sub/sub")
+	("sub/sub", par "this is sub/sub"),
+	("action", action [_ -> par "action performed"])
     }
 
     def db_unknown = {h0 "Uhoh", par "You seem to be lost!"}
