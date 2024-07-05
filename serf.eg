@@ -156,11 +156,11 @@ namespace Serf (
                               ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
 
     def db_page = [K -> 
-        if db_has K then {h0 "The Egel Language", link "<- home" "", hr, db_get K |> do_action, hr 
+        if db_has K then {h0 "The Egel Language", link "<- home" "", hr, db_get K |> db_action, hr 
                          | db_subs K |> map [K -> link K K]} 
         else db_unknown]
 
-    def do_action = [{} -> {} | {X|XX} -> map do_action {X|XX} |(action F) -> F none|X -> X]
+    def db_action = [{} -> {} | {X|XX} -> map db_action {X|XX} |(action F) -> F none|X -> X]
 
     def db_pages =
     {
