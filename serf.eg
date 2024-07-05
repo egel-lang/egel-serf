@@ -52,6 +52,8 @@ namespace Serf (
 
     def trim_lead = [ S -> if String::starts_with "/" S then String::remove 0 1 S else S ]
 
+    def split_lines = do unpack |> split_on '\n' |> map pack 
+
     def serve_selector = do db_page |> to_gopher |> [T -> print T]
 
     def gopher_line =
@@ -59,7 +61,7 @@ namespace Serf (
 
     def code_numbers =
         let F = [S -> (iter (4 - String::length S) [S -> " " + S] S) + ": "] in
-        do unpack |> split_on '\n' |> map pack 
+	do  split_lines
             |> [LL -> zip_with (+) (map (do to_text |> F) (from_to 1 (length LL + 1))) LL]
 
     def to_gopher =
@@ -110,6 +112,8 @@ pre { overflow: auto; }
 </head>
 """
 
+    def html_escape = do Regex::replace_all (Regex::compile "<") "&lt;"
+
     def to_html =
         [{} -> "" |{X|XX} -> to_html X + to_html XX
         |(h0 S) ->     "<h1>" + S + "</h1>\n"
@@ -117,7 +121,7 @@ pre { overflow: auto; }
         |(h2 S) ->     "    <i>" +  S + "</i>\n"
         |hr ->         "\n"
         |(line S) ->   "    " + S + "\n"
-        |(code S) ->   "    <pre><code>" + S + "</code></pre>\n"
+        |(code S) ->   "    <pre><code>" + (foldr [S0 S1 -> S0 + "\n" + S1] "" (code_numbers (html_escape S))) + "</code></pre>\n"
         |(link S T) -> "DIR <a href=\"/" + T + "\">" + S + "</a>\n" ]
 )
 
@@ -157,10 +161,7 @@ namespace Serf (
     def db_pages =
     {
         ("", {line "Egel is an untyped concurrent functional scripting language based on eager combinator rewriting", line "with a concise but remarkably powerful syntax."}),
-        ("sub", {h1 "a h1", h2 "a h2", line "this is sub"}),
-        ("sub/sub", line "this is sub/sub"),
-        ("action", action [_ -> line "action performed"]),
-        ("code", code "foo bar \n bazz \n")
+        ("self", action [_ -> code (OS::read_all (OS::open_in "serf.eg"))])
     }
 
     def db_unknown = {h0 "Uhoh", line "You seem to be lost!"}
