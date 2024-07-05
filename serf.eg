@@ -61,7 +61,7 @@ namespace Serf (
 
     def code_numbers =
         let F = [S -> (iter (4 - String::length S) [S -> " " + S] S) + ": "] in
-	do  split_lines
+        do  split_lines
             |> [LL -> zip_with (+) (map (do to_text |> F) (from_to 1 (length LL + 1))) LL]
 
     def to_gopher =
@@ -83,7 +83,7 @@ namespace Serf (
 
     def serve_verb =
         [("GET", URL) -> db_page URL |> to_html |> serve_page
-        |_ -> 43 ]
+        |_ -> db_unknown |> to_html |> serve_page ]
 
     def serve_page =
         [ T ->
@@ -151,16 +151,22 @@ namespace Serf (
 
     def db_keys = Dict::keys db
 
-    def db_subs = [K -> db_keys |> filter (String::starts_with K) 
-                        |> filter [S -> and (S /= K) ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
+    def db_subs = [K -> 
+        db_keys |> filter (String::starts_with K) 
+                |> filter [S -> and (S /= K) 
+                              ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
 
-    def db_page = [K -> if db_has K then {h0 "The Egel Language", link "<- home" "", hr, db_get K |> do_action, hr | db_subs K |> map [K -> link K K]} else db_unknown]
+    def db_page = [K -> 
+        if db_has K then {h0 "The Egel Language", link "<- home" "", hr, db_get K |> do_action, hr 
+                         | db_subs K |> map [K -> link K K]} 
+        else db_unknown]
 
     def do_action = [{} -> {} | {X|XX} -> map do_action {X|XX} |(action F) -> F none|X -> X]
 
     def db_pages =
     {
-        ("", {line "Egel is an untyped concurrent functional scripting language based on eager combinator rewriting", line "with a concise but remarkably powerful syntax."}),
+        ("", {line "Egel is an untyped concurrent functional scripting language based on eager combinator rewriting",
+              line "with a concise but remarkably powerful syntax."}),
         ("self", action [_ -> code (OS::read_all (OS::open_in "serf.eg"))])
     }
 
