@@ -88,7 +88,7 @@ namespace Serf (
         [ T ->
              print "HTTP/1.1 200 OK\r\n";
              print "Content-Type: text/html\r\n\r\n";
-          print_html T ]
+             print_html T ]
 
     def print_html =
         [T ->
