@@ -26,11 +26,11 @@ def main = Serf::start
 namespace Serf (
 
     def start =
-        if elem "help" args then print "Usage: serf.eg [help] [gopher|www|debug]\n"
+        if elem "start" args then start_servers
         else if elem "gopher" args then serve_gopher_request
         else if elem "www" args then serve_www_request
         else if elem "debug" args then debug
-        else start_servers
+        else print "Usage: serf.eg [start|gopher|www|debug]\n"
 
     def start_gopher_server =
         OS::exec "while true ; do nc -4 -l 192.168.2.7 1500 -c \"egel serf.eg gopher\"; sleep 1 ; done"
