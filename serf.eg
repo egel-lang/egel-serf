@@ -52,7 +52,7 @@ namespace Serf (
 
     def trim_lead = [ S -> if String::starts_with "/" S then String::remove 0 1 S else S ]
 
-    def split_lines = do Regex::matches (Regex::compile "[^\n]+")
+    def split_lines = Regex::split (Regex::compile "\n")
 
     def serve_selector = do db_page |> to_gopher |> [T -> print T]
 
@@ -76,7 +76,7 @@ namespace Serf (
 
 namespace Serf (
 
-    def to_request = do unpack |> split_on ' ' |> [{V,U|_} -> (pack V, trim_lead (pack U))| _ -> none]
+    def to_request = do Regex::split (Regex::compile " ") |> [{V,U|_} -> (V, trim_lead U)| _ -> none]
 
     def serve_www_request = serve_verb ((OS::read_line OS::stdin) |> trim_crlf |> to_request)
 
