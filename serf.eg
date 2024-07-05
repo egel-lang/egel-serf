@@ -60,17 +60,16 @@ namespace Serf (
         [S -> "i" + S + "\tfake\t(NULL)\t0\r\n"]
 
     def code_numbers =
-        let F = [S -> (iter (4 - String::length S) [S -> " " + S] S) + ": "] in
         do  split_lines
-            |> [LL -> zip_with (+) (map (do to_text |> F) (from_to 1 (length LL + 1))) LL]
+            |> [LL -> zip_with (+) (map [N -> format "{:4}: " N] (from_to 1 (length LL + 1))) LL]
 
     def to_gopher =
         [{} -> "" |{X|XX} -> to_gopher X + to_gopher XX
         |(h0 S) ->   gopher_line ("# " + S)
         |(h1 S) ->   gopher_line ("## " + S)
         |(h2 S) ->   gopher_line ("### " +  S)
-        |(line S) ->  gopher_line S
-        |hr       ->  gopher_line ""
+        |(line S) -> gopher_line S
+        |hr       -> gopher_line ""
         |(code S) -> map gopher_line (code_numbers S) |> foldr (+) ""
         |(link S T) -> "1" + S + "\t/" + T + "\tegel.dev\t70\r\n"  ]
 )
