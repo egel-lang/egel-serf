@@ -33,10 +33,10 @@ namespace Serf (
         else print "Usage: serf.eg [start|gopher|www|debug]\n"
 
     def start_gopher_server =
-        OS::exec "while true ; do nc -4 -l 192.168.2.7 1500 -c \"egel serf.eg gopher\"; sleep 1 ; done"
+        OS::exec "while true ; do nc -4 -l 192.168.2.7 1470 -c \"egel serf.eg gopher\"; sleep 1 ; done"
 
     def start_www_server =
-        OS::exec "while true ; do nc -4 -l 192.168.2.7 1501 -c \"egel serf.eg www\"; sleep 1 ; done"
+        OS::exec "while true ; do nc -4 -l 192.168.2.7 1480 -c \"egel serf.eg www\"; sleep 1 ; done"
 
     def start_servers =
         let S0 = async [_ -> start_gopher_server] in
