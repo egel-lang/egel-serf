@@ -36,9 +36,12 @@ namespace Serf (
         OS::exec "while true ; do nc -4 -l 192.168.2.7 1500 -c \"egel serf.eg gopher\"; sleep 1 ; done"
 
     def start_www_server =
-        OS::exec "while true ; do nc -4 -l 192.168.2.7 1580 -c \"egel serf.eg www\"; sleep 1 ; done"
+        OS::exec "while true ; do nc -4 -l 192.168.2.7 1501 -c \"egel serf.eg www\"; sleep 1 ; done"
 
-    def start_servers = start_gopher_server #; start_www_server; none
+    def start_servers =
+        let S0 = async [_ -> start_gopher_server] in
+        let S1 = async [_ -> start_www_server] in 
+            await S0; await S1
 )
 
 namespace Serf (
@@ -64,7 +67,8 @@ namespace Serf (
         |(h0 S) ->   gopher_line ("# " + S)
         |(h1 S) ->   gopher_line ("## " + S)
         |(h2 S) ->   gopher_line ("### " +  S)
-        |(par S) ->  gopher_line S
+        |(line S) ->  gopher_line S
+        |hr       ->  gopher_line ""
         |(code S) -> map gopher_line (code_numbers S) |> foldr (+) ""
         |(link S T) -> "1" + S + "\t/" + T + "\tegel.dev\t70\r\n"  ]
 )
@@ -87,18 +91,34 @@ namespace Serf (
 
     def print_html =
         [T ->
-             print "<html>\n";
-             print "<body>\n" T "</body>\n";
+             print "<!DOCTYPE html>";
+             print "<html dir=\"ltr\">\n";
+             print html_header;
+             print "<body><pre>" T "</pre></body>\n";
              print "</html>\n" ]
 
+    def html_header = """
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>The Egel Language</title>
+<style type="text/css">
+a { text-decoration: none; } a:hover { text-decoration: underline; }
+pre { overflow: auto; }
+@media (prefers-color-scheme: dark) { body { background-color: #000; color: #bdbdbd; color-scheme: dark; } a { color: #56c8ff; } }
+</style>
+<meta content="width=device-width" name="viewport" />
+</head>
+"""
+
     def to_html =
-        [{} -> "" |{X|XX} -> to_html X + "\n" + to_html XX
-        |(h0 S) -> "<h1>" + S + "</h1>\n"
-        |(h1 S) -> "<h2>" + S + "</h2>\n"
-        |(h2 S) -> "<h3>" +  S + "</h3>\n"
-        |(par S) -> "<p>" + S + "</p>\n"
-        |(code S) -> "<pre><code>" + S + "</code></pre>\n"
-        |(link S T) -> "<a href=\"/" + T + "\">" + T + "</a>\n" ]
+        [{} -> "" |{X|XX} -> to_html X + to_html XX
+        |(h0 S) ->     "<h1>" + S + "</h1>\n"
+        |(h1 S) ->     "    <b>" + S + "</b>\n"
+        |(h2 S) ->     "    <i>" +  S + "</i>\n"
+        |hr ->         "\n"
+        |(line S) ->   "    " + S + "\n"
+        |(code S) ->   "    <pre><code>" + S + "</code></pre>\n"
+        |(link S T) -> "DIR <a href=\"/" + T + "\">" + S + "</a>\n" ]
 )
 
 namespace Serf (
@@ -107,16 +127,17 @@ namespace Serf (
 
     def to_txt =
         [{} -> "" |{X|XX} -> to_txt X + "\n" + to_txt XX
-        |(h0 S) -> "# " + S + "\n"
-        |(h1 S) -> "## " + S + "\n"
-        |(h2 S) -> "### " +  S + "\n"
-        |(par S) -> S + "\n"
+        |(h0 S)   -> "# " + S + "\n"
+        |(h1 S)   -> "## " + S + "\n"
+        |(h2 S)   -> "### " +  S + "\n"
+        |hr       ->  "\n"
+        |(line S) -> S + "\n"
         |(code S) -> S + "\n"
         |(link S T) -> "->" + S + "::" + T ]
 )
 
 namespace Serf (
-    data h0, h1, h2, par, code, link, action
+    data h0, h1, h2, line, hr, code, link, action
 
     val db = Dict::from_list db_pages
 
@@ -129,18 +150,18 @@ namespace Serf (
     def db_subs = [K -> db_keys |> filter (String::starts_with K) 
                         |> filter [S -> and (S /= K) ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
 
-    def db_page = [K -> if db_has K then {h0 "The Egel Language", db_get K |> do_action | db_subs K |> map [K -> link K K]} else db_unknown]
+    def db_page = [K -> if db_has K then {h0 "The Egel Language", link "<- home" "", hr, db_get K |> do_action, hr | db_subs K |> map [K -> link K K]} else db_unknown]
 
     def do_action = [{} -> {} | {X|XX} -> map do_action {X|XX} |(action F) -> F none|X -> X]
 
     def db_pages =
     {
-        ("", {par "Be cool."}),
-        ("sub", par "this is sub"),
-        ("sub/sub", par "this is sub/sub"),
-        ("action", action [_ -> par "action performed"]),
+        ("", {line "Egel is an untyped concurrent functional scripting language based on eager combinator rewriting", line "with a concise but remarkably powerful syntax."}),
+        ("sub", {h1 "a h1", h2 "a h2", line "this is sub"}),
+        ("sub/sub", line "this is sub/sub"),
+        ("action", action [_ -> line "action performed"]),
         ("code", code "foo bar \n bazz \n")
     }
 
-    def db_unknown = {h0 "Uhoh", par "You seem to be lost!"}
+    def db_unknown = {h0 "Uhoh", line "You seem to be lost!"}
 )
