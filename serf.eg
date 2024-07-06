@@ -170,7 +170,7 @@ namespace Serf (
         ("", {line "Egel is an untyped concurrent functional scripting language based on eager combinator rewriting",
               line "with a concise but remarkably powerful syntax.",
 	      hr,
-              url "interpreter github sources" "https://github.com/egel-lang/"}),
+              url "interpreter" "https://github.com/egel-lang/"}),
         ("manual", action [_ -> code (OS::exec "MANWIDTH=80 man egel")]),
         ("self",   action [_ -> code (OS::read_all (OS::open_in "serf.eg"))])
     }
