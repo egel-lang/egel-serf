@@ -71,7 +71,8 @@ namespace Serf (
         |(line S) -> gopher_line S
         |hr       -> gopher_line ""
         |(code S) -> map gopher_line (code_numbers S) |> foldr (+) ""
-        |(link S T) -> "1" + S + "\t/" + T + "\tegel.dev\t70\r\n"  ]
+        |(link S T) -> "1" + S + "\t/" + T + "\tegel.dev\t70\r\n" 
+        |(url S T) -> "h" + S + "\tURL:" + T + "\tegel.dev\t70\r\n" ]
 )
 
 namespace Serf (
@@ -116,12 +117,13 @@ pre { overflow: auto; }
     def to_html =
         [{} -> "" |{X|XX} -> to_html X + to_html XX
         |(h0 S) ->     "<h1>" + S + "</h1>\n"
-        |(h1 S) ->     "    <b>" + S + "</b>\n"
-        |(h2 S) ->     "    <i>" +  S + "</i>\n"
+        |(h1 S) ->     "     <b>" + S + "</b>\n"
+        |(h2 S) ->     "     <i>" +  S + "</i>\n"
         |hr ->         "\n"
-        |(line S) ->   "    " + S + "\n"
-        |(code S) ->   "    <pre><code>" + (foldr [S0 S1 -> S0 + "\n" + S1] "" (code_numbers (html_escape S))) + "</code></pre>\n"
-        |(link S T) -> "DIR <a href=\"/" + T + "\">" + S + "</a>\n" ]
+        |(line S) ->   "     " + S + "\n"
+        |(code S) ->   "     <pre><code>" + (foldr [S0 S1 -> S0 + "\n" + S1] "" (code_numbers (html_escape S))) + "</code></pre>\n"
+        |(link S T) -> " DIR <a href=\"/" + T + "\">" + S + "</a>\n" 
+	|(url S T)  -> " URL <a href=\"" + T + "\">" + S + "</a>\n"]
 )
 
 namespace Serf (
@@ -136,11 +138,12 @@ namespace Serf (
         |hr       ->  "\n"
         |(line S) -> S + "\n"
         |(code S) -> S + "\n"
-        |(link S T) -> "->" + S + "::" + T ]
+        |(link S T) -> S + " -> " + T
+	|(url S T)  -> S + " => " + T ]
 )
 
 namespace Serf (
-    data h0, h1, h2, line, hr, code, link, action
+    data h0, h1, h2, line, hr, code, link, url, action
 
     val db = Dict::from_list db_pages
 
@@ -156,7 +159,7 @@ namespace Serf (
                               ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
 
     def db_page = [K -> 
-        if db_has K then {h0 "The Egel Language", link "<- home" "", hr, db_get K |> db_action, hr 
+        if db_has K then {h0 "The Egel Language", link "home" "", hr, db_get K |> db_action, hr 
                          | db_subs K |> map [K -> link K K]} 
         else db_unknown]
 
@@ -165,8 +168,11 @@ namespace Serf (
     def db_pages =
     {
         ("", {line "Egel is an untyped concurrent functional scripting language based on eager combinator rewriting",
-              line "with a concise but remarkably powerful syntax."}),
-        ("self", action [_ -> code (OS::read_all (OS::open_in "serf.eg"))])
+              line "with a concise but remarkably powerful syntax.",
+	      hr,
+              url "interpreter github sources" "https://github.com/egel-lang/"}),
+        ("manual", action [_ -> code (OS::exec "MANWIDTH=80 man egel")]),
+        ("self",   action [_ -> code (OS::read_all (OS::open_in "serf.eg"))])
     }
 
     def db_unknown = {h0 "Uhoh", line "You seem to be lost!"}
