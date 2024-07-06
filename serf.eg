@@ -123,7 +123,7 @@ pre { overflow: auto; }
         |(line S) ->   "     " + S + "\n"
         |(code S) ->   "     <pre><code>" + (foldr [S0 S1 -> S0 + "\n" + S1] "" (code_numbers (html_escape S))) + "</code></pre>\n"
         |(link S T) -> " DIR <a href=\"/" + T + "\">" + S + "</a>\n" 
-	|(url S T)  -> " URL <a href=\"" + T + "\">" + S + "</a>\n"]
+        |(url S T)  -> " URL <a href=\"" + T + "\">" + S + "</a>\n"]
 )
 
 namespace Serf (
@@ -139,7 +139,7 @@ namespace Serf (
         |(line S) -> S + "\n"
         |(code S) -> S + "\n"
         |(link S T) -> S + " -> " + T
-	|(url S T)  -> S + " => " + T ]
+        |(url S T)  -> S + " => " + T ]
 )
 
 namespace Serf (
@@ -169,7 +169,7 @@ namespace Serf (
     {
         ("", {line "Egel is an untyped concurrent functional scripting language based on eager",
               line "combinator rewriting with a concise but remarkably powerful syntax.",
-	      hr,
+              hr,
               url "interpreter" "https://github.com/egel-lang/"}),
         ("manual", action [_ -> code (OS::exec "MANWIDTH=80 man egel")]),
         ("self",   action [_ -> code (OS::read_all (OS::open_in "serf.eg"))])
