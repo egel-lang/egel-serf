@@ -167,8 +167,8 @@ namespace Serf (
 
     def db_pages =
     {
-        ("", {line "Egel is an untyped concurrent functional scripting language based on eager combinator rewriting",
-              line "with a concise but remarkably powerful syntax.",
+        ("", {line "Egel is an untyped concurrent functional scripting language based on eager",
+              line "combinator rewriting with a concise but remarkably powerful syntax.",
 	      hr,
               url "interpreter" "https://github.com/egel-lang/"}),
         ("manual", action [_ -> code (OS::exec "MANWIDTH=80 man egel")]),
