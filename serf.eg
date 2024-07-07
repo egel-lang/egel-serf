@@ -123,13 +123,13 @@ pre { overflow: auto; }
     def to_html =
         [{} -> "" |{X|XX} -> to_html X + to_html XX
         |(h0 S) ->     "<h1>" + S + "</h1>\n"
-        |(h1 S) ->     "     <b>" + S + "</b>\n"
-        |(h2 S) ->     "     <i>" +  S + "</i>\n"
+        |(h1 S) ->     "       <b>" + S + "</b>\n"
+        |(h2 S) ->     "       <i>" +  S + "</i>\n"
         |hr ->         "\n"
-        |(line S) ->   "     " + S + "\n"
-        |(code S) ->   "     <pre><code>" + (foldr [S0 S1 -> S0 + "\n" + S1] "" (code_numbers (html_escape S))) + "</code></pre>\n"
-        |(link S T) -> " DIR <a href=\"/" + T + "\">" + S + "</a>\n" 
-        |(url S T)  -> " URL <a href=\"" + T + "\">" + S + "</a>\n"]
+        |(line S) ->   "       " + S + "\n"
+        |(code S) ->   "       <pre><code>" + (foldr [S0 S1 -> S0 + "\n" + S1] "" (code_numbers (html_escape S))) + "</code></pre>\n"
+        |(link S T) -> "   DIR <a href=\"/" + T + "\">" + S + "</a>\n" 
+        |(url S T)  -> "  HTML <a href=\"" + T + "\">" + S + "</a>\n"]
 )
 
 namespace Serf (
