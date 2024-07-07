@@ -71,8 +71,8 @@ namespace Serf (
         |(line S) -> gopher_line S
         |hr       -> gopher_line ""
         |(code S) -> map gopher_line (code_numbers S) |> foldr (+) ""
-        |(link S T) -> "1" + S + "\t/" + T + "\tegel.dev\t70\r\n" 
-        |(url S T) -> "h" + S + "\tURL:" + T + "\tegel.dev\t70\r\n" ]
+        |(link S T) -> "1" + S + "\t/" + T + "\tgopher.egel.dev\t70\r\n" 
+        |(url S T) -> "h" + S + "\tURL:" + T + "\tgopher.egel.dev\t70\r\n" ]
 )
 
 namespace Serf (
