@@ -438,9 +438,9 @@
 
  + `Regex::matches` *pat s0* - a list of pattern matches in a string
 
- + `Regex::replace` *pat s0 s1* - replace the first occurence of pattern in a
+ + `Regex::replace` *pat s0 s1* - replace the first occurence of a pattern
 
- + `Regex::replace_all` *pat s0 s1* - replace the all occurences of pattern in a
+ + `Regex::replace_all` *pat s0 s1* - replace all occurences of a pattern 
 
  + `Regex::group` *pat s0* - the matched groups in a string
 
