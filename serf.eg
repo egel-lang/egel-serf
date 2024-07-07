@@ -157,7 +157,7 @@ namespace Serf (
 
     def db_get = Dict::get db
 
-    def db_keys = Dict::keys db
+    def db_keys = db_pages |> map fst
 
     def db_subs = [K -> 
         db_keys |> filter (String::starts_with K) 
