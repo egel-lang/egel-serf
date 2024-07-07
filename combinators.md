@@ -98,13 +98,13 @@
 
  + `Math::exp` *x* - the exp of a number
 
- + `Math::expm1` *x* - subtracting 1 from exp x
+ + `Math::expm1` *x* - subtracting 1 from exp
 
  + `Math::floor` *x* - the largest integer less than or equal to a number
 
  + `Math::log` *x* - the natural logarithm (loge, also ln) of a number
 
- + `Math::log1p` *x* - the natural logarithm (loge, also ln) of 1 + x for
+ + `Math::log1p` *x* - the natural logarithm of the next number
 
  + `Math::log10` *x* - the base 10 logarithm of a number
 
@@ -118,7 +118,7 @@
 
  + `Math::round` *x* - the value of a number rounded to the nearest
 
- + `Math::sign` *x* - the sign of the x, indicating whether x is
+ + `Math::sign` *x* - the sign of the a number
 
  + `Math::sin` *x* - the sine of a number
 
