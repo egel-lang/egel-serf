@@ -178,6 +178,7 @@ namespace Serf (
               hr,
               url "interpreter" "https://github.com/egel-lang/"}),
         ("manual", action [_ -> code (OS::exec "MANWIDTH=80 man egel")]),
+        ("combinators", action [_ -> code (OS::exec "cat combinators.md")]),
         ("self",   action [_ -> code (OS::read_all (OS::open_in "serf.eg"))])
     }
 
