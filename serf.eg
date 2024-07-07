@@ -61,7 +61,7 @@ namespace Serf (
 
     def code_numbers =
         do  split_lines
-            |> [LL -> zip_with (+) (map [N -> format "  {:4}: " N] (from_to 1 (length LL + 1))) LL]
+            |> [LL -> zip_with (+) (map [N -> format " {:4}: " N] (from_to 1 (length LL + 1))) LL]
 
     def to_gopher =
         [{} -> "" |{X|XX} -> to_gopher X + to_gopher XX
