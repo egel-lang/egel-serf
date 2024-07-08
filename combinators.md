@@ -252,6 +252,30 @@
 
  + `Dict::keys` *d* - dictionary keys as list
 
+## <egel/src/builtin_time.hpp>
+
+ + `Time::clock` *s* - create a clock object
+
+ + `Time::now` *c* - current time according to a clock
+
+ + `Time::is_steady` *c* - is a steady clock
+
+ + `Time::milliseconds` *n* - a number of milliseconds
+
+ + `Time::seconds` *n* - a number of seconds
+
+ + `Time::minutes` *n* - a number of minutes
+
+ + `Time::hours` *n* - a number of hours
+
+ + `Time::days` *n* - a number of days
+
+ + `Time::weeks` *n* - a number of weeks
+
+ + `Time::months` *n* - a number of months
+
+ + `Time::years` *n* - a number of years
+
 ## <egel/src/builtin_ffi.hpp>
 
  + `FFI::find_library` *s* - find a library
