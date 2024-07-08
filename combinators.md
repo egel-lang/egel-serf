@@ -608,61 +608,61 @@
 
 ## <egel/include/calculate.eg>
 
- + `Calculate::return` *a* - calculate further with value a
+ + `Calculate::return` *a* - calculate further with value
 
- + `Calculate::chain` *f g* - first do f, then g
+ + `Calculate::chain` *f g* - chain two calculations
 
- + `Calculate::run` *f s* - run calculation f on state s
+ + `Calculate::run` *f s* - run calculation on state
 
- + `Calculate::<*` *f g* - first do f, then g
+ + `Calculate::<*` *f g* - chain
 
- + `Calculate::apply` *f g* - first do f, then modify argument with g
+ + `Calculate::apply` *f g* - apply a function to a calculation
 
- + `Calculate::modify` *f g* - first do f, then modify state with g
+ + `Calculate::modify` *f g* - modify state
 
- + `Calculate::<@` *f g* - first do f, then apply g to argument
+ + `Calculate::<@` *f g* - apply
 
- + `Calculate::<+` *f g* - first do f, then modify state with g
+ + `Calculate::<+` *f g* - modify
 
 ## <egel/include/search.eg>
 
  + `Search::success` *a* - succeed with value a
 
- + `Search::message` *m* - fail or raise with message m
+ + `Search::message` *m* - fail or raise with message
 
- + `Search::parallel` *p q* - try alternatives p or q
+ + `Search::parallel` *p q* - try both alternatives
 
- + `Search::serial` *p q* - try alternative p then force q
+ + `Search::serial` *p q* - try alternative, then force the next
 
- + `Search::apply` *p f* - apply f to the argument being calculated
+ + `Search::apply` *p f* - apply to the argument being calculated
 
- + `Search::opt` *p v* - optionally succeed p with value v
+ + `Search::opt` *p v* - optionally succeed with a value
 
- + `Search::serial_opt` *p q* - optionally succeed p with value v
+ + `Search::serial_opt` *p q* - optionally succeed with value
 
- + `Search::<+>` *p q* - try alternatives p or q
+ + `Search::<+>` *p q* - try both alternatives  
 
- + `Search::<->` *p q* - try alternative p then q
+ + `Search::<->` *p q* - try composition of alternatives
 
- + `Search::<*>` *p q* - try alternative p then force q
+ + `Search::<*>` *p q* - try alternative then force
 
- + `Search::</>` *p q* - try alternative p then q optionally
+ + `Search::</>` *p q* - try alternative then optionally
 
- + `Search::<@>` *p f* - apply f to the result of p
+ + `Search::<@>` *p f* - apply function to the result
 
- + `Search::<!>` *p m* - set the failure message to m
+ + `Search::<!>` *p m* - set the failure message
 
- + `Search::one` *p* - one time p and return a singleton result
+ + `Search::one` *p* - one time and return a singleton result
 
- + `Search::plus` *p* - one or more p and return a list result
+ + `Search::plus` *p* - one or more and return a list result
 
- + `Search::star` *p* - zero or more p and return a list result
+ + `Search::star` *p* - zero or more and return a list result
 
- + `Search::plus_sep` *p s* - one or more p separated by s
+ + `Search::plus_sep` *p s* - one or more with separator
 
- + `Search::star_sep` *p s* - zero or more p separated by s
+ + `Search::star_sep` *p s* - zero or more with separator
 
- + `Search::search` *p f t e s* - search with p on state s 
+ + `Search::search` *p f t e s* - search on state with three handlers
 
 ## <egel/include/map.eg>
 
@@ -766,7 +766,7 @@
 
  + `Gen::reverse` *l* - reverse a list
 
- + `Gen::block` *n* - list of number from 0 to n exclusive
+ + `Gen::block` *n* - list of number from lower to upper exclusive
 
  + `Gen::nth` *n l* - nth element of a list
 
@@ -776,9 +776,9 @@
 
  + `Gen::drop` *n l* - drop the first n elements of a list
 
- + `Gen::repeat` *n* - infinite list of n
+ + `Gen::repeat` *n* - infinite list of elements
 
- + `Gen::cycle` *l* - infinite list of cycling list l
+ + `Gen::cycle` *l* - infinite list of cycling list
 
  + `Gen::from` *min* - list of numbers from min 
 
