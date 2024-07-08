@@ -772,9 +772,9 @@
 
  + `Gen::insert` *n x l* - insert an element at given position
 
- + `Gen::take` *n l* - take the first n elements of a list
+ + `Gen::take` *n l* - take the first elements of a list
 
- + `Gen::drop` *n l* - drop the first n elements of a list
+ + `Gen::drop` *n l* - drop the first elements of a list
 
  + `Gen::repeat` *n* - infinite list of elements
 
