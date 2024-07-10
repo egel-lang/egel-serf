@@ -276,6 +276,16 @@
 
  + `Time::years` *n* - a number of years
 
+ + `Time::local_time` *n* - time point to local date
+
+ + `Time::gm_time` *n* - time point to gm date
+
+ + `Time::date_to_time` *n* - date to time point
+
+ + `Time::date_to_tuple` *n* - date to tuple
+
+ + `Time::date_from_tuple` *n* - date from tuple
+
 ## <egel/src/builtin_ffi.hpp>
 
  + `FFI::find_library` *s* - find a library
