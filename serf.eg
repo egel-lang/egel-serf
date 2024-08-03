@@ -118,7 +118,7 @@ pre { overflow: auto; }
 </head>
 """
 
-    def html_escape = do Regex::replace_all (Regex::compile "<") "&lt;"
+    def html_escape = do Regex::replace_all (Regex::compile "&") "&amp;" |> Regex::replace_all (Regex::compile "<") "&lt;" 
 
     def to_html =
         [{} -> "" |{X|XX} -> to_html X + to_html XX
