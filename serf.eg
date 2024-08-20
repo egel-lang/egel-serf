@@ -161,7 +161,7 @@ namespace Serf (
     def db_subs = [K -> 
         db_keys |> filter (String::starts_with K) 
                 |> filter [S -> and (S /= K) 
-                              ((String::index_of "/" (String::remove 0 (String::length K + 1) S)) < 0)] ]
+                              ((String::index_of "/" (String::remove 0 (String::count K + 1) S)) < 0)] ]
 
     def db_page = [K -> 
         if db_has K then {h0 "The Egel Language", link "home" "", hr, db_get K |> db_action, hr 
