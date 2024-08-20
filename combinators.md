@@ -34,6 +34,10 @@
 
  + `System::<=` *x y* - builtin less or equals
 
+ + `System::>` *x y* - builtin greater
+
+ + `System::>=` *x y* - builtin greater or equals
+
  + `System::==` *x y* - builtin equality
 
  + `System::/=` *x y* - builtin inequality
@@ -50,13 +54,13 @@
 
  + `System::set_ref` *ref x* - set reference objec
 
- + `System::unpack` *s* - create a list of chars from a string
-
- + `System::pack` *s* - create a string from a list of chars
-
  + `System::arg` *n* - the n-th application argument, or none
 
  + `System::get_env` *s* - the value of environment variable, or none
+
+ + `System::munch` *o0 .. on* - terms to list
+
+ + `System::unmunch` *{o0 .. on}* - list to terms
 
  + `System::print` *o0 .. on* - print terms
 
@@ -166,7 +170,7 @@
 
  + `String::move_index` *index delta s* - move index by delta chars
 
- + `String::length` *s* - number of chars 
+ + `String::count` *s* - number of chars
 
  + `String::is_empty` *s* - test whether the text is empty
 
@@ -199,6 +203,10 @@
  + `String::ord` *c* - integer value of unicode point/character
 
  + `String::chr` *n* - unicode point of integer value
+
+ + `String::to_chars` *s* - create a list of chars from a string
+
+ + `String::from_chars` *s* - create a string from a list of chars
 
 ## <egel/src/builtin_eval.hpp>
 
@@ -239,6 +247,8 @@
  + `System::wait_for` *f n* - check whether future reduced during milliseconds
 
  + `System::is_valid` *f* - check whether future is reduced
+
+ + `System::sleep` *n* - sleep for a number of milliseconds
 
 ## <egel/src/builtin_dict.hpp>
 
@@ -535,6 +545,8 @@
  + `System::max` *x y* - maximum
 
  + `System::**` *x y* - power (temporary)
+
+ + `System::printf` *s x0 .. xn* - print formatted
 
  + `List::length` *l* - length of a list
 
