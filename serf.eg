@@ -47,7 +47,7 @@ namespace Serf (
 namespace Serf (
     def serve_gopher_request = serve_selector ((OS::read_line OS::stdin) |> trim_crlf |> trim_lead)
 
-    def trim_crlf = do List::to_chars |> break [C -> or (C == '\n') (C == '\r')] |> fst |> List::from_chars
+    def trim_crlf = do String::to_chars |> break [C -> or (C == '\n') (C == '\r')] |> fst |> String::from_chars
 
     def trim_lead = [ S -> if String::starts_with "/" S then String::remove 0 1 S else S ]
 
