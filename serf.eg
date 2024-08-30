@@ -15,7 +15,6 @@
 
 import "prelude.eg"
 import "os.ego"
-import "regex.ego"
 import "dictionary.eg"
 
 using System
