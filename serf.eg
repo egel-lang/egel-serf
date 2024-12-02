@@ -14,8 +14,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import "prelude.eg"
-import "os.ego"
-import "dictionary.eg"
 
 using System
 using List
@@ -116,7 +114,7 @@ pre { overflow: auto; }
 </head>
 """
 
-    def html_escape = do Regex::replace_all (Regex::compile "&") "&amp;" |> Regex::replace_all (Regex::compile "<") "&lt;" 
+    def html_escape = do Regex::replace_all (Regex::compile "&") "&amp;" |> Regex::replace_all (Regex::compile "<") "&lt;"
 
     def to_html =
         [{} -> "" |{X|XX} -> to_html X + to_html XX
